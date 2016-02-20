@@ -16,8 +16,8 @@ with open(file) as myFile:
         sub_array = []
         for num, line in enumerate(myFile, 1):
            #num is the line number. an integer
-	  #line is the line. a string
-            #for i in enumerate (line, 1):
+	       #line is the line. a string
+           #for i in enumerate (line, 1):
 
             if lookup in line:
                 index_of_percent = [i for i,x in enumerate(line) if x == lookup];
@@ -31,9 +31,19 @@ with open(file) as myFile:
                     else:
                         break;
         print sub_array
+        item = 0
+        for element in sub_array:
+            if( 'n' in sub_array[item]):
+                sub_array[item] = 'noun';
+            elif('v' in sub_array[item]):
+                sub_array[item] = 'verb';
+            elif('a' in sub_array[item]):
+                sub_array[item] = 'adjective';
+
+            item = item+1;
 
 
-
+        print sub_array
 
 
 
