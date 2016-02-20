@@ -1,2 +1,4 @@
 MadlibsIntent my word is {Word}
-
+MadlibsIntent I choose {Word}
+MadlibsIntent I pick {Word}
+MadlibsIntent {Word}
