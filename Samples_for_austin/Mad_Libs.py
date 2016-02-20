@@ -1,25 +1,29 @@
 # We use random class to randomly select a mad lib file.
 def selectFile():
+    global theFile;
     import random
     randomInt = random.randint(1,2)
     if randomInt == 1:
-        file = "ML_1.txt"
+        theFile = "ML_1.txt"
     elif randomInt == 2:
-        file = "ML_2.txt"
+        theFile = "ML_2.txt"
     else:
         print "Broken"
-    return file;
+    return theFile;
 i = 0;
 q = 0;
+theFile = "";
 # Once file number is determined we open it.
 lookup = '%';
+sub_array = [];
 
 def alexaSay(someArray):
+    global theFile;
     if(len(someArray) != len(sub_array)):
         print "Array size mismatch. The array you passed is not equal in length to the array I passed"
     lineBuffer = '';
     indexPos = 0;
-    lineBuffer = open(file,'r').read();
+    lineBuffer = open(theFile,'r').read();
     while lookup in lineBuffer:
         #Remove percents
         next_target = lineBuffer.find('%');
@@ -29,6 +33,7 @@ def alexaSay(someArray):
 
 
 def getSubArray():
+    global sub_array
     with open(selectFile()) as myFile:
             sub_array = []
             for num, line in enumerate(myFile, 1):
@@ -70,3 +75,4 @@ def getSubArray():
         #final_string = alexaSay(responses_array);
         #This is how you pass your array of things to read to the program. Replace with the array you make, Pratik
 print getSubArray()
+print alexaSay(getSubArray())
