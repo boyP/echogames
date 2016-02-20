@@ -1,0 +1,4 @@
+#save HTML
+    file1 = open('./htmls/' + filename + ".html", 'w') #overwrite existing
+    file1.write(driver.page_source.encode('utf-8'))
+    file1.close()
