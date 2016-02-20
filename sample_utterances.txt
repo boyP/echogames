@@ -1,1 +1,2 @@
-play mad libs
+MadlibsIntent my word is {Word}
+

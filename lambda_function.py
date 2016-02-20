@@ -65,7 +65,7 @@ def on_intent(intent_request, session):
 
     # Dispatch to your skill's intent handlers
     if intent_name == "MadlibsIntent":# TO BE CHANGED ON DEVELOPER.AMAZON!!!!!!
-        return initializeGame()
+        return getResponse(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return initializeGame()
     elif intent_name == "AMAZON.StopIntent":
@@ -140,19 +140,26 @@ def initializeGame():
     #card_title = intent['name']
     card_title = ''
     #speech_output = "Happy Birthday To You, Happy Birthday To You, Happy Birthday Dear Pratik, Happy Birthday To You "
-    speech_output = foo()
+    #speech_output = foo()
 
-    should_end_session = True
+    NUM_QUESTIONS = 1
+    speech_output = "Let's play Mad Libs, I'm choosing an awesome script. I'm going to ask you" + str(NUM_QUESTIONS) + " questions. Let's begin."
+    speech_output = speech_output + " Give me a noun."
+    reprompt_text = "Give me a noun."
+
+    should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, 'reprompt_text_string', should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
-def promptWord():
+def getResponse(intent, session):
     """ We want to prompt the user for speicifc words
     """
 
     session_attributes = {}
-    card_title = "Let's play Mad Libs"
-    speech_output = "Testing 1 2 3."
+    answer = intent['slots']['Word']['value'] # need 2 fix
+
+    card_title = intent['name']
+    speech_output = "You just said " + answer
 
     should_end_session = True
     return build_response(session_attributes, build_speechlet_response(

@@ -1,7 +1,13 @@
 {
   "intents": [
     {
-      "intent": "MadlibsIntent"
+      "intent": "MadlibsIntent",
+      "slots" : [
+        {
+          "name": "Word",
+          "type": "LIST_OF_WORDS"
+        }
+      ]
     },
     {
       "intent": "AMAZON.HelpIntent"
