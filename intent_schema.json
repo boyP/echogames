@@ -1,0 +1,10 @@
+{
+  "intents": [
+    {
+      "intent": "MadlibsIntent",
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}
