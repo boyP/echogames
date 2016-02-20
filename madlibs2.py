@@ -141,15 +141,16 @@ def initializeGame():
 
     #Choosing the script
     questions = chooseScript()
+    index = 0
     NUM_QUESTIONS = len(questions)
 
     # Save the questions in session attributes for later use
-    sessionAttributes = {'questions': questions, 'index': 0}
+    session_attributes = {'questions': questions, 'index': index}
 
     # Generate instruction output
     speech_output = "Let's play Mad Libs, I'm choosing an awesome script. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Let's begin."
-    speech_output = speech_output + " Give me a noun."
-    reprompt_text = "Give me a " + questions[index]
+    speech_output = speech_output + " Give me a " + questions[index]
+    reprompt_text = "Give me a noun. " + questions[index]
 
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
@@ -195,7 +196,7 @@ def getResponse(intent, session):
 
     else:
         speech_output = "index is less than length of questions " \
-                    "Internal problem."
+                        "Internal problem."
         reprompt_text = "I did not understand what you said."
 
     # else:
@@ -212,7 +213,8 @@ def chooseScript():
 
 # Read the script based on the responses
 def readScript(responses):
-    return "blah blah blah."
+    return ' '.join(responses)
+    # return "blah blah blah."
 
 def stopGame():
     """ We want to quit the application
