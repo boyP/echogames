@@ -7,6 +7,9 @@ from __future__ import print_function
 import requests
 from fuzzywuzzy import fuzz, process
 
+# Mad Lib imports and variables
+import random
+PERCENT_DELIMITER = '%';
 
 def lambda_handler(event, context):
     """ Route the incoming request based on type (LaunchRequest, IntentRequest,
@@ -64,7 +67,7 @@ def on_intent(intent_request, session):
     intent_name = intent_request['intent']['name']
 
     # Dispatch to your skill's intent handlers
-    if intent_name == "MadlibsIntent":# TO BE CHANGED ON DEVELOPER.AMAZON!!!!!!
+    if intent_name == "MadlibsIntent":
         return getResponse(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return initializeGame()
@@ -137,15 +140,21 @@ def initializeGame():
     """
 
     session_attributes = {}
-    #card_title = intent['name']
-    card_title = ''
-    #speech_output = "Happy Birthday To You, Happy Birthday To You, Happy Birthday Dear Pratik, Happy Birthday To You "
-    #speech_output = foo()
+    card_title = "Mad Libs"
 
-    NUM_QUESTIONS = 1
-    speech_output = "Let's play Mad Libs, I'm choosing an awesome script. I'm going to ask you" + str(NUM_QUESTIONS) + " questions. Let's begin."
-    speech_output = speech_output + " Give me a noun."
-    reprompt_text = "Give me a noun."
+    #Choosing the script
+    script = selectFile()
+    questions = getQuestions(script)
+    index = 0
+    NUM_QUESTIONS = len(questions)
+
+    # Save the questions in session attributes for later use
+    session_attributes = {'questions': questions, 'index': index, 'fileName': script}
+
+    # Generate instruction output
+    speech_output = "Let's play Mad Libs, I'm choosing an awesome script. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Let's begin."
+    speech_output = speech_output + " Give me a " + questions[index]
+    reprompt_text = "Give me a noun. " + questions[index]
 
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
@@ -155,20 +164,130 @@ def getResponse(intent, session):
     """ We want to prompt the user for speicifc words
     """
 
+    # initialization 
+    should_end_session = False
     session_attributes = {}
-    answer = intent['slots']['Word']['value'] # need 2 fix
+    card_title = 'Prompt'
+    reprompt_text = "I am ready to read script."
 
-    card_title = intent['name']
-    speech_output = "You just said " + answer
+    if "questions" in session.get('attributes', {}):
+        # Get attributes from the session
+        questions = session['attributes']['questions']
+        index = session['attributes']['index']
+        fileName = session['attributes']['fileName']
 
-    should_end_session = True
+        if(index < len(questions)): 
+            # Get the user input answer
+            answer = intent['slots']['Word']['value']
+            speech_output = "You just said " + answer
+            
+            # Re ask the question if necessary
+            reprompt_text = "Give me a " + questions[index];
+            
+            # Update the state with the new responses
+            questions[index] = answer
+            index = index + 1
+
+            # Check state
+            if(index < len(questions)):
+                speech_output = speech_output + "Please give me a " + questions[index]
+                session_attributes = {'questions': questions, 'index': index, 'fileName': fileName}
+
+            else:
+                # You have already entered all of the words, time to read script
+                should_end_session = True
+                script = readScript(questions, fileName)
+                speech_output = "Reading script. " + script + " Goodbye."
+        else:
+            speech_output = "index is less than length of questions " \
+                            "Internal problem."
+            reprompt_text = "I did not understand what you said."
+    else:
+        speech_output = "I did not understand what you said " \
+                        "Please try again."
+        reprompt_text = "I did not understand what you said."
+
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
+
+# # Chooses the script
+# def getQuestions():
+#     return ['noun', 'verb', 'adjective']
+
+# # Read the script based on the responses
+# def readScript(responses):
+#     return ' '.join(responses)
+
+# Chooses the script
+def getQuestions(script):
+    return getQuestionsAsArray([], script);
+
+# Read the script based on the responses
+def readScript(responses, madlibFile):
+    return alexaSay(responses, madlibFile);
 
 def stopGame():
     """ We want to quit the application
     """
     should_end_session = True
+
+#---------------Madlib Core Routines----------------#
+def selectFile():
+    madlibFile = "";
+    randomInt = random.randint(1,2)
+    if randomInt == 1:
+        madlibFile = "ML_1.txt"
+    elif randomInt == 2:
+        madlibFile = "ML_2.txt"
+    return madlibFile;
+
+def alexaSay(responses, madlibFile):
+    lineBuffer = '';
+    indexPos = 0;
+    lineBuffer = open(madlibFile,'r').read();
+    while PERCENT_DELIMITER in lineBuffer:
+        #Remove percents
+        next_target = lineBuffer.find('%');
+
+        print('next_target = ', next_target)
+        print('line buffer = ', lineBuffer)
+        print('len line buffer =', len(lineBuffer))
+        print('responses =', responses)
+        print('len(responses) =', len(responses))
+        print('indexPos =', indexPos)
+        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+3):]
+        indexPos = indexPos + 1;
+    return lineBuffer
+
+def getQuestionsAsArray(sub_array, madlibFile):
+    i = 0
+    q = 0
+    with open(madlibFile) as myFile:
+            sub_array = []
+            for num, line in enumerate(myFile, 1):
+                if PERCENT_DELIMITER in line:
+                    index_of_percent = [i for i,x in enumerate(line) if x == PERCENT_DELIMITER];
+                    q=0;
+                    for element in index_of_percent:
+                        if(q < len(index_of_percent)):
+                            sub_array.append(line[index_of_percent[q] + 1]);
+                            i = i+1;
+                            q = q+1;
+                            continue
+                        else:
+                            break;
+            item = 0
+            for element in sub_array:
+                if('n' in sub_array[item]):
+                    sub_array[item] = 'noun';
+                elif('v' in sub_array[item]):
+                    sub_array[item] = 'verb';
+                elif('a' in sub_array[item]):
+                    sub_array[item] = 'adjective';
+
+                item = item+1;
+            return sub_array;
+
 
 # --------------- Helpers that build all of the responses ----------------------
 
