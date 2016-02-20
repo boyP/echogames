@@ -31,7 +31,7 @@ with open(file) as myFile:
                             print 'Line length = ', (len(line)+1)
                             print 'Type -> ', line[index_of_percent[q] + 1]
                             print i, type(i)
-                            sub_array[i] = line[index_of_percent[q] + 1];
+                            sub_array.append(line[index_of_percent[q] + 1]);
                             print 'array value = ', sub_array[i]
                             i = i+1;
                             q = q+1;
