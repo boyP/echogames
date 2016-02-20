@@ -165,43 +165,43 @@ def getResponse(intent, session):
     card_title = 'Prompt'
     reprompt_text = "I am ready to read script."
 
-    if "questions" in session.get('attributes', {}):
+    # if "questions" in session.get('attributes', {}):
         # Get attributes from the session
-        questions = session['attributes']['questions']
-        index = session['attributes']['index']
+    questions = session['attributes']['questions']
+    index = session['attributes']['index']
 
-        if(index < len(questions)): 
-            # Get the user input answer
-            answer = intent['slots']['Word']['value']
-            speech_output = "You just said " + answer + "."
-            
-            # Re ask the question if necessary
-            reprompt_text = "Give me a " + questions[index];
-            
-            # Update the state with the new responses
-            questions[index] = answer
-            index++
+    if(index < len(questions)): 
+        # Get the user input answer
+        answer = intent['slots']['Word']['value']
+        speech_output = "You just said " + answer + "."
+        
+        # Re ask the question if necessary
+        reprompt_text = "Give me a " + questions[index];
+        
+        # Update the state with the new responses
+        questions[index] = answer
+        index = index + 1
 
-            # Check state
-            if(index < len(questions)):
-                speech_output = speech_output + "Please give me a " + questions[index]
-                session_attributes = {'questions': questions, 'index': index}
-
-            else:
-                # You have already entered all of the words, time to read script
-                should_end_session = True
-                script = readScript(questions)
-                speech_output = "Reading script. " + script + " Goodbye."
+        # Check state
+        if(index < len(questions)):
+            speech_output = speech_output + "Please give me a " + questions[index]
+            session_attributes = {'questions': questions, 'index': index}
 
         else:
-            speech_output = "index is less than length of questions " \
-                        "Internal problem."
-            reprompt_text = "I did not understand what you said."
+            # You have already entered all of the words, time to read script
+            should_end_session = True
+            script = readScript(questions)
+            speech_output = "Reading script. " + script + " Goodbye."
 
     else:
-        speech_output = "I did not understand what you said " \
-                        "Please try again."
+        speech_output = "index is less than length of questions " \
+                    "Internal problem."
         reprompt_text = "I did not understand what you said."
+
+    # else:
+    #     speech_output = "I did not understand what you said " \
+    #                     "Please try again."
+    #     reprompt_text = "I did not understand what you said."
 
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
