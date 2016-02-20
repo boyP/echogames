@@ -174,7 +174,7 @@ def getResponse(intent, session):
     if(index < len(questions)): 
         # Get the user input answer
         answer = intent['slots']['Word']['value']
-        speech_output = "You just said " + answer + "."
+        speech_output = "You just said " + answer
         
         # Re ask the question if necessary
         reprompt_text = "Give me a " + questions[index];
@@ -207,19 +207,84 @@ def getResponse(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
+# # Chooses the script
+# def chooseScript():
+#     return ['noun', 'verb', 'adjective']
+
+# # Read the script based on the responses
+# def readScript(responses):
+#     return ' '.join(responses)
+
 # Chooses the script
 def chooseScript():
-    return ['noun', 'verb', 'adjective']
+    return getSubArray([]);
 
 # Read the script based on the responses
 def readScript(responses):
-    return ' '.join(responses)
-    # return "blah blah blah."
+    return alexaSay(responses);
 
 def stopGame():
     """ We want to quit the application
     """
     should_end_session = True
+
+#---------------Madlib Core Routines----------------#
+def selectFile():
+    global theFile;
+    import random
+    randomInt = random.randint(1,2)
+    if randomInt == 1:
+        theFile = "ML_1.txt"
+    elif randomInt == 2:
+        theFile = "ML_2.txt"
+    return theFile;
+
+theFile = "";
+# Once file number is determined we open it.
+lookup = '%';
+
+def alexaSay(responses):
+    global theFile;
+
+    lineBuffer = '';
+    indexPos = 0;
+    lineBuffer = open(theFile,'r').read();
+    while lookup in lineBuffer:
+        #Remove percents
+        next_target = lineBuffer.find('%');
+        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+3):]
+        indexPos = indexPos + 1;
+    return lineBuffer
+
+def getSubArray(sub_array):
+    i = 0
+    q = 0
+    with open(theFile) as myFile:
+            sub_array = []
+            for num, line in enumerate(myFile, 1):
+                if lookup in line:
+                    index_of_percent = [i for i,x in enumerate(line) if x == lookup];
+                    q=0;
+                    for element in index_of_percent:
+                        if(q < len(index_of_percent)):
+                            sub_array.append(line[index_of_percent[q] + 1]);
+                            i = i+1;
+                            q = q+1;
+                            continue
+                        else:
+                            break;
+            item = 0
+            for element in sub_array:
+                if('n' in sub_array[item]):
+                    sub_array[item] = 'noun';
+                elif('v' in sub_array[item]):
+                    sub_array[item] = 'verb';
+                elif('a' in sub_array[item]):
+                    sub_array[item] = 'adjective';
+
+                item = item+1;
+            return sub_array;
+
 
 # --------------- Helpers that build all of the responses ----------------------
 

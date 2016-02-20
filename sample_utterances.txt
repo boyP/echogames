@@ -2,3 +2,6 @@ MadlibsIntent my word is {Word}
 MadlibsIntent I choose {Word}
 MadlibsIntent I pick {Word}
 MadlibsIntent {Word}
+MadlibsIntent my verb is {Word}
+MadlibsIntent my adjective is {Word}
+MadlibsIntent my noun is {Word}
