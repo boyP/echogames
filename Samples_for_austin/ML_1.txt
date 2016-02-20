@@ -1,0 +1,3 @@
+A long time ago in a %n1 far far away there was a %a1 %n2 who liked to %v1. 
+One day %n2 had too much %n3 and began to %v2 like there was no tomorow.
+The government stepped in and suddenly the %a1 %n2 was a %a2 %n4.
