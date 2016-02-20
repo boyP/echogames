@@ -1,9 +1,12 @@
 
+#some sub_array, a 2d array
     with open('./htmls/' + filename + ".html", 'r') as myFile:
         for num, line in enumerate(myFile, 1):
 		#num is the line number. an integer
 		#line is the line. a string
             if lookup in line:
+                index_of_percent = line.find(lookup) #Will give us the index
+                sub_array[][] = #Austin ddo this pls
 		#Get index of lookup string
 		#Add %Xt to sub_array (which is going to be index + 1 and index + 2)
 
@@ -14,4 +17,4 @@ sub_array is a 2D array
 | n3	v3	|
 | n4	v4	|
 
-We need to 
+We need to
