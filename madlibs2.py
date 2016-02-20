@@ -7,6 +7,7 @@ from __future__ import print_function
 import requests
 from fuzzywuzzy import fuzz, process
 
+PERCENT_DELIMITER = '%';
 
 def lambda_handler(event, context):
     """ Route the incoming request based on type (LaunchRequest, IntentRequest,
@@ -241,7 +242,6 @@ def selectFile():
 
 theFile = "";
 # Once file number is determined we open it.
-lookup = '%';
 
 def alexaSay(responses):
     global theFile;
@@ -249,7 +249,7 @@ def alexaSay(responses):
     lineBuffer = '';
     indexPos = 0;
     lineBuffer = open(theFile,'r').read();
-    while lookup in lineBuffer:
+    while PERCENT_DELIMITER in lineBuffer:
         #Remove percents
         next_target = lineBuffer.find('%');
         lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+3):]
@@ -259,11 +259,11 @@ def alexaSay(responses):
 def getSubArray(sub_array):
     i = 0
     q = 0
-    with open(theFile) as myFile:
+    with open(selectFile()) as myFile:
             sub_array = []
             for num, line in enumerate(myFile, 1):
-                if lookup in line:
-                    index_of_percent = [i for i,x in enumerate(line) if x == lookup];
+                if PERCENT_DELIMITER in line:
+                    index_of_percent = [i for i,x in enumerate(line) if x == PERCENT_DELIMITER];
                     q=0;
                     for element in index_of_percent:
                         if(q < len(index_of_percent)):
