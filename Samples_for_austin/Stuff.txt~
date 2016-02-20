@@ -1,4 +1,13 @@
-#save HTML
-    file1 = open('./htmls/' + filename + ".html", 'w') #overwrite existing
-    file1.write(driver.page_source.encode('utf-8'))
-    file1.close()
+
+    with open('./htmls/' + filename + ".html", 'r') as myFile:
+        for num, line in enumerate(myFile, 1):
+            if lookup in line:
+		#Get index of lookup string
+		#Add %Xt to sub_array
+
+
+sub_array is a 2D array
+| n1	v1	|
+| n2	v2	|
+| n3	v3	|
+| n4	v4	|
