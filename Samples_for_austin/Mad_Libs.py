@@ -11,16 +11,22 @@ i = 0
 j = 0
 # Once file number is determined we open it.
 lookup = '%';
-sub_array = [["n", 0] , ["n", 0]]
 with open(file) as myFile:
         for num, line in enumerate(myFile, 1):
            #num is the line number. an integer
 	  #line is the line. a string
-            for i,j in enumerate (line, 1):
+            #for i in enumerate (line, 1):
+            sub_array = [[0]*(len(line)+1),[0]*2]
+            for i in xrange(len(line)):
                 if lookup in line:
+                    print lookup
+                    print type(lookup)
+                    print 'line =', line
+                    print 'line.find =', line.find(lookup)
                     index_of_percent = int(line.find(lookup)) #Will give us the index
-                    sub_array[i,j] = (index_of_percent + 1)
-                    sub_array[i,j + 1] = (index_of_percent + 2)
+                    print i, j, type(i), type(j)
+                    sub_array[i][j] = index_of_percent + 1
+                    sub_array[i][j + 1] = index_of_percent + 2
                     continue
 
 
