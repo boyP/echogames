@@ -248,7 +248,7 @@ def alexaSay(responses, madlibFile):
     while PERCENT_DELIMITER in lineBuffer:
         #Remove percents
         next_target = lineBuffer.find('%');
-        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+3):]
+        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+2):]
         indexPos = indexPos + 1;
     return lineBuffer
 
