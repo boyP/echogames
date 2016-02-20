@@ -33,7 +33,7 @@ with open(file) as myFile:
         print sub_array
         item = 0
         for element in sub_array:
-            if( 'n' in sub_array[item]):
+            if('n' in sub_array[item]):
                 sub_array[item] = 'noun';
             elif('v' in sub_array[item]):
                 sub_array[item] = 'verb';
