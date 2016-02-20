@@ -57,15 +57,16 @@ def getSubArray():
                     sub_array[item] = 'adjective';
 
                 item = item+1;
-
+            return sub_array;
 
         #At this point, Echo will take in the sub_array which contains the parts of speech
 
         #get user inputs
 
         #Put into function below
-        print sub_array;
-        print alexaSay(sub_array);
+        #print sub_array;
+        #print alexaSay(sub_array);
         #get list of user inputs from echo and put them in the final script
-        final_string = alexaSay(responses_array);
+        #final_string = alexaSay(responses_array);
         #This is how you pass your array of things to read to the program. Replace with the array you make, Pratik
+print getSubArray()
