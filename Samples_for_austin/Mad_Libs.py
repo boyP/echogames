@@ -17,28 +17,27 @@ with open(file) as myFile:
            #num is the line number. an integer
 	  #line is the line. a string
             #for i in enumerate (line, 1):
-            sub_array = [[0]*(len(line)+1)]
-            for i in xrange(len(line)):
-                if lookup in line:
-                    index_of_percent = [i for i,x in enumerate(line) if x == lookup];
-                    print "Going through indexes"
-                    print "Indexes -> ", index_of_percent
-                    for element in index_of_percent:
-                        if(q != len(index_of_percent)):
-                            print "Element -> ",q
-                            print "For index ->", index_of_percent[q]
-                            print 'Text = ', line
-                            print 'Line length = ', (len(line)+1)
-                            print 'Type -> ', line[index_of_percent[q] + 1]
-                            print i, type(i)
-                            sub_array.append(line[index_of_percent[q] + 1]);
-                            print 'array value = ', sub_array[i]
-                            i = i+1;
-                            q = q+1;
-                            continue
-                        else:
-                            print "BREAK";
-                            break;
+            sub_array = []
+            if lookup in line:
+                index_of_percent = [i for i,x in enumerate(line) if x == lookup];
+                print "\n\n\nNEXT LINE"
+                print "Indexes -> ", index_of_percent
+                print "Line -> ", line
+                q=0;
+                for element in index_of_percent:
+                    if(q < len(index_of_percent)):
+                        print "\n\nElement -> ",q
+                        print "For index ->", index_of_percent[q]
+                        print 'Type -> ', line[index_of_percent[q] + 1]
+                        print i, type(i)
+                        sub_array.append(line[index_of_percent[q] + 1]);
+                        print "SUB ARRAY -> ", sub_array
+                        i = i+1;
+                        q = q+1;
+                        continue
+                    else:
+                        print "BREAK";
+                        break;
 
 
 
@@ -51,7 +50,3 @@ with open(file) as myFile:
 
 
 
-
-
-
-madFile.close()
