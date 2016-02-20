@@ -7,6 +7,8 @@ from __future__ import print_function
 import requests
 from fuzzywuzzy import fuzz, process
 
+# Mad Lib imports and variables
+import random
 PERCENT_DELIMITER = '%';
 
 def lambda_handler(event, context):
@@ -141,12 +143,13 @@ def initializeGame():
     card_title = "Mad Libs"
 
     #Choosing the script
-    questions = chooseScript()
+    script = selectFile()
+    questions = getQuestions(script)
     index = 0
     NUM_QUESTIONS = len(questions)
 
     # Save the questions in session attributes for later use
-    session_attributes = {'questions': questions, 'index': index}
+    session_attributes = {'questions': questions, 'index': index, 'fileName' script}
 
     # Generate instruction output
     speech_output = "Let's play Mad Libs, I'm choosing an awesome script. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Let's begin."
@@ -167,49 +170,48 @@ def getResponse(intent, session):
     card_title = 'Prompt'
     reprompt_text = "I am ready to read script."
 
-    # if "questions" in session.get('attributes', {}):
+    if "questions" in session.get('attributes', {}):
         # Get attributes from the session
-    questions = session['attributes']['questions']
-    index = session['attributes']['index']
+        questions = session['attributes']['questions']
+        index = session['attributes']['index']
+        fileName = session['attributes']['fileName']
 
-    if(index < len(questions)): 
-        # Get the user input answer
-        answer = intent['slots']['Word']['value']
-        speech_output = "You just said " + answer
-        
-        # Re ask the question if necessary
-        reprompt_text = "Give me a " + questions[index];
-        
-        # Update the state with the new responses
-        questions[index] = answer
-        index = index + 1
+        if(index < len(questions)): 
+            # Get the user input answer
+            answer = intent['slots']['Word']['value']
+            speech_output = "You just said " + answer
+            
+            # Re ask the question if necessary
+            reprompt_text = "Give me a " + questions[index];
+            
+            # Update the state with the new responses
+            questions[index] = answer
+            index = index + 1
 
-        # Check state
-        if(index < len(questions)):
-            speech_output = speech_output + "Please give me a " + questions[index]
-            session_attributes = {'questions': questions, 'index': index}
+            # Check state
+            if(index < len(questions)):
+                speech_output = speech_output + "Please give me a " + questions[index]
+                session_attributes = {'questions': questions, 'index': index, 'fileName': fileName}
 
+            else:
+                # You have already entered all of the words, time to read script
+                should_end_session = True
+                script = readScript(questions, fileName)
+                speech_output = "Reading script. " + script + " Goodbye."
         else:
-            # You have already entered all of the words, time to read script
-            should_end_session = True
-            script = readScript(questions)
-            speech_output = "Reading script. " + script + " Goodbye."
-
+            speech_output = "index is less than length of questions " \
+                            "Internal problem."
+            reprompt_text = "I did not understand what you said."
     else:
-        speech_output = "index is less than length of questions " \
-                        "Internal problem."
+        speech_output = "I did not understand what you said " \
+                        "Please try again."
         reprompt_text = "I did not understand what you said."
-
-    # else:
-    #     speech_output = "I did not understand what you said " \
-    #                     "Please try again."
-    #     reprompt_text = "I did not understand what you said."
 
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
 # # Chooses the script
-# def chooseScript():
+# def getQuestions():
 #     return ['noun', 'verb', 'adjective']
 
 # # Read the script based on the responses
@@ -217,12 +219,12 @@ def getResponse(intent, session):
 #     return ' '.join(responses)
 
 # Chooses the script
-def chooseScript():
-    return getSubArray([]);
+def getQuestions(script):
+    return getQuestionsAsArray([], script);
 
 # Read the script based on the responses
-def readScript(responses):
-    return alexaSay(responses);
+def readScript(responses, madlibFile):
+    return alexaSay(responses, madlibFile);
 
 def stopGame():
     """ We want to quit the application
@@ -231,24 +233,18 @@ def stopGame():
 
 #---------------Madlib Core Routines----------------#
 def selectFile():
-    global theFile;
-    import random
+    madlibFile = "";
     randomInt = random.randint(1,2)
     if randomInt == 1:
-        theFile = "ML_1.txt"
+        madlibFile = "ML_1.txt"
     elif randomInt == 2:
-        theFile = "ML_2.txt"
-    return theFile;
+        madlibFile = "ML_2.txt"
+    return madlibFile;
 
-theFile = "";
-# Once file number is determined we open it.
-
-def alexaSay(responses):
-    global theFile;
-
+def alexaSay(responses, madlibFile):
     lineBuffer = '';
     indexPos = 0;
-    lineBuffer = open(theFile,'r').read();
+    lineBuffer = open(madlibFile,'r').read();
     while PERCENT_DELIMITER in lineBuffer:
         #Remove percents
         next_target = lineBuffer.find('%');
@@ -256,10 +252,10 @@ def alexaSay(responses):
         indexPos = indexPos + 1;
     return lineBuffer
 
-def getSubArray(sub_array):
+def getQuestionsAsArray(sub_array, madlibFile):
     i = 0
     q = 0
-    with open(selectFile()) as myFile:
+    with open(madlibFile) as myFile:
             sub_array = []
             for num, line in enumerate(myFile, 1):
                 if PERCENT_DELIMITER in line:
