@@ -3,7 +3,7 @@
         for num, line in enumerate(myFile, 1):
             if lookup in line:
 		#Get index of lookup string
-		#Add %Xt to sub_array
+		#Add %Xt to sub_array (which is going to be 			#index + 1 and index + 2)
 
 
 sub_array is a 2D array
@@ -11,3 +11,5 @@ sub_array is a 2D array
 | n2	v2	|
 | n3	v3	|
 | n4	v4	|
+
+We need to 
