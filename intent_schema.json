@@ -1,10 +1,16 @@
 {
   "intents": [
     {
-      "intent": "MadlibsIntent",
+      "intent": "MadlibsIntent"
     },
     {
       "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
     }
   ]
 }
