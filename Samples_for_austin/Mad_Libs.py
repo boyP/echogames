@@ -4,7 +4,7 @@ def selectFile():
     import random
     randomInt = random.randint(1,2)
     if randomInt == 1:
-        theFile = "ML_1.txt"
+        theFile = "ML_1.txt" #update
     elif randomInt == 2:
         theFile = "ML_2.txt"
     else:
