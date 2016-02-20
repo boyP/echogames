@@ -48,7 +48,7 @@ def on_launch(launch_request, session):
     print("on_launch requestId=" + launch_request['requestId'] +
           ", sessionId=" + session['sessionId'])
     # Dispatch to your skill's launch
-    return get_welcome_response()
+    return initializeGame()
 
 
 def on_intent(intent_request, session):
@@ -64,7 +64,11 @@ def on_intent(intent_request, session):
     if intent_name == "MadlibsIntent":# TO BE CHANGED ON DEVELOPER.AMAZON!!!!!!
         return initializeGame()
     elif intent_name == "AMAZON.HelpIntent":
-        return get_welcome_response()
+        return initializeGame()
+    elif intent_name == "AMAZON.StopIntent":
+        return stopGame()
+    elif intent_name == "AMAZON.CancelIntent":
+        return stopGame()
     else:
         raise ValueError("Invalid intent")
 
@@ -86,7 +90,7 @@ def initializeGame():
     """
 
     session_attributes = {}
-    card_title = "Let's play Mad Libs"
+    card_title = intent['name']
     speech_output = "Let's play Mad Libs, " \
                     "I'm choosing an awesome script." \
                     "Goodbye."
@@ -96,7 +100,21 @@ def initializeGame():
         card_title, speech_output, reprompt_text, should_end_session))
 
 def promptWord():
-    pass
+    """ We want to prompt the user for speicifc words
+    """
+
+    session_attributes = {}
+    card_title = "Let's play Mad Libs"
+    speech_output = "Testing 1 2 3."
+
+    should_end_session = True
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+
+def stopGame():
+    """ We want to quit the application
+    """
+    should_end_session = True
 
 # --------------- Helpers that build all of the responses ----------------------
 
