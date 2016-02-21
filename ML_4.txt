@@ -1,2 +1,3 @@
-We have a ways to go %n1 .
-
+Do not take your %n1 for granted   . 
+Someday you might need to %v2 and get a %a3 break   .
+All it takes is a %n4 to %v5 to your future   .
