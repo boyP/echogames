@@ -239,6 +239,10 @@ def selectFile():
         madlibFile = "ML_1.txt"
     elif randomInt == 2:
         madlibFile = "ML_2.txt"
+    elif randomInt == 3:
+        madlibFile = "ML_3.txt"
+    elif randomInt == 4:
+        madlibFile = "ML_4.txt"
     return madlibFile;
 
 def alexaSay(responses, madlibFile):
