@@ -242,7 +242,7 @@ def stopGame():
 #---------------Madlib Core Routines----------------#
 def selectFile():
     madlibFile = "";
-    randomInt = random.randint(1,2)
+    randomInt = random.randint(1,4)
     if randomInt == 1:
         madlibFile = "ML_1.txt"
     elif randomInt == 2:
