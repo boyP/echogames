@@ -1,1 +1,3 @@
-This hasn't been implemented yet, %n1 .
+It was a very %a1 night and every %n2 was asleep   .
+Not a single %n3 made a sound, not even a peep   .
+Except the %n4 in the field, who %v5 up a few sheep   .
