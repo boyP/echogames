@@ -239,6 +239,10 @@ def selectFile():
         madlibFile = "ML_1.txt"
     elif randomInt == 2:
         madlibFile = "ML_2.txt"
+    elif randomInt == 3:
+        madlibFile = "ML_3.txt"
+    elif randomInt == 4:
+        madlibFile = "ML_4.txt"
     return madlibFile;
 
 def alexaSay(responses, madlibFile):
@@ -248,7 +252,7 @@ def alexaSay(responses, madlibFile):
     while PERCENT_DELIMITER in lineBuffer:
         #Remove percents
         next_target = lineBuffer.find('%');
-        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+3):]
+        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+2):]
         indexPos = indexPos + 1;
     return lineBuffer
 
