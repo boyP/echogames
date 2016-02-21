@@ -110,7 +110,7 @@ def initializeGame():
     # Generate instruction output
     speech_output = "Let's play Mad Libs. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Say cancel to quit. Let's begin."
     speech_output = speech_output + " Give me a " + questions[index] + ". "
-    reprompt_text = "Give me a noun. " + questions[index] + ". "
+    reprompt_text = "Give me a " + questions[index] + ". "
 
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
