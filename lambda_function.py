@@ -152,9 +152,9 @@ def initializeGame():
     session_attributes = {'questions': questions, 'index': index, 'fileName': script}
 
     # Generate instruction output
-    speech_output = "Let's play Mad Libs, I'm choosing an awesome script. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Let's begin."
-    speech_output = speech_output + " Give me a " + questions[index]
-    reprompt_text = "Give me a noun. " + questions[index]
+    speech_output = "Let's play Mad Libs. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Let's begin."
+    speech_output = speech_output + " Give me a " + questions[index] + ". "
+    reprompt_text = "Give me a noun. " + questions[index] + ". "
 
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
@@ -179,10 +179,13 @@ def getResponse(intent, session):
         if(index < len(questions)): 
             # Get the user input answer
             answer = intent['slots']['Word']['value']
-            speech_output = "You just said " + answer
+            if answer == 'stop':
+                return stopGame()
+
+            speech_output = "You just said " + answer + ". "
             
             # Re ask the question if necessary
-            reprompt_text = "Give me a " + questions[index];
+            reprompt_text = "Give me a " + questions[index] + ". ";
             
             # Update the state with the new responses
             questions[index] = answer
@@ -190,13 +193,20 @@ def getResponse(intent, session):
 
             # Check state
             if(index < len(questions)):
-                speech_output = speech_output + "Please give me a " + questions[index]
+                speech_output = speech_output + "Please give me a " + questions[index] + ". "
                 session_attributes = {'questions': questions, 'index': index, 'fileName': fileName}
 
             else:
                 # You have already entered all of the words, time to read script
                 should_end_session = True
                 script = readScript(questions, fileName)
+                url = 'http://textbelt.com/text'
+                payload = {
+                    'number': '<YOUR PHONE NUMBER HERE>',
+                    'message': script,
+                }
+                requests.post(url, data=payload)
+
                 speech_output = "Reading script. " + script + " Goodbye."
         else:
             speech_output = "index is less than length of questions " \
@@ -226,10 +236,27 @@ def getQuestions(script):
 def readScript(responses, madlibFile):
     return alexaSay(responses, madlibFile);
 
+def sendSMS(script):
+    pass
+    url = 'https://150.212.33.69:8000'
+    payload = {
+        'message': script
+    }
+    try:
+        requests.post(url, data=payload)
+    except Exception as e:
+        print('failllllll, e =', e)
+
 def stopGame():
     """ We want to quit the application
     """
     should_end_session = True
+    session_attributes = {}
+    card_title = 'Stop'
+    speech_output = "Goodbye."
+    reprompt_text = ""
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
 
 #---------------Madlib Core Routines----------------#
 def selectFile():
@@ -239,6 +266,10 @@ def selectFile():
         madlibFile = "ML_1.txt"
     elif randomInt == 2:
         madlibFile = "ML_2.txt"
+    elif randomInt == 3:
+        madlibFile = "ML_3.txt"
+    elif randomInt == 4:
+        madlibFile = "ML_4.txt"
     return madlibFile;
 
 def alexaSay(responses, madlibFile):
@@ -248,14 +279,7 @@ def alexaSay(responses, madlibFile):
     while PERCENT_DELIMITER in lineBuffer:
         #Remove percents
         next_target = lineBuffer.find('%');
-
-        print('next_target = ', next_target)
-        print('line buffer = ', lineBuffer)
-        print('len line buffer =', len(lineBuffer))
-        print('responses =', responses)
-        print('len(responses) =', len(responses))
-        print('indexPos =', indexPos)
-        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+3):]
+        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+2):]
         indexPos = indexPos + 1;
     return lineBuffer
 
