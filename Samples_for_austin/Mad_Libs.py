@@ -2,11 +2,15 @@
 def selectFile():
     global theFile;
     import random
-    randomInt = random.randint(1,2)
+    randomInt = random.randint(1,4)
     if randomInt == 1:
         theFile = "ML_1.txt" #update
     elif randomInt == 2:
         theFile = "ML_2.txt"
+    elif randomInt == 3:
+        theFile = "ML_3.txt"
+    elif randomInt == 4:
+        theFile = "ML_4.txt"
     else:
         print "Broken"
     return theFile;
