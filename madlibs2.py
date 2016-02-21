@@ -153,8 +153,8 @@ def initializeGame():
 
     # Generate instruction output
     speech_output = "Let's play Mad Libs, I'm choosing an awesome script. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Let's begin."
-    speech_output = speech_output + " Give me a " + questions[index]
-    reprompt_text = "Give me a noun. " + questions[index]
+    speech_output = speech_output + " Give me a " + questions[index] + " ."
+    reprompt_text = "Give me a noun. " + questions[index] + " ."
 
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
@@ -179,10 +179,10 @@ def getResponse(intent, session):
         if(index < len(questions)): 
             # Get the user input answer
             answer = intent['slots']['Word']['value']
-            speech_output = "You just said " + answer
+            speech_output = "You just said " + answer + " ."
             
             # Re ask the question if necessary
-            reprompt_text = "Give me a " + questions[index];
+            reprompt_text = "Give me a " + questions[index] + " .";
             
             # Update the state with the new responses
             questions[index] = answer
@@ -190,7 +190,7 @@ def getResponse(intent, session):
 
             # Check state
             if(index < len(questions)):
-                speech_output = speech_output + "Please give me a " + questions[index]
+                speech_output = speech_output + "Please give me a " + questions[index] + " ."
                 session_attributes = {'questions': questions, 'index': index, 'fileName': fileName}
 
             else:
