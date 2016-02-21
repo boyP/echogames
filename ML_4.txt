@@ -1,2 +1,2 @@
-We have a ways to go %n1
+We have a ways to go %n1 .
 
