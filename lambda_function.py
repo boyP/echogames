@@ -152,7 +152,7 @@ def initializeGame():
     session_attributes = {'questions': questions, 'index': index, 'fileName': script}
 
     # Generate instruction output
-    speech_output = "Let's play Mad Libs. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Let's begin."
+    speech_output = "Let's play Mad Libs. I'm going to ask you " + str(NUM_QUESTIONS) + " questions. Say cancel to quit. Let's begin."
     speech_output = speech_output + " Give me a " + questions[index] + ". "
     reprompt_text = "Give me a noun. " + questions[index] + ". "
 
@@ -179,7 +179,7 @@ def getResponse(intent, session):
         if(index < len(questions)): 
             # Get the user input answer
             answer = intent['slots']['Word']['value']
-            if answer == 'stop':
+            if answer == 'cancel':
                 return stopGame()
 
             speech_output = "You just said " + answer + ". "
@@ -200,24 +200,12 @@ def getResponse(intent, session):
                 # You have already entered all of the words, time to read script
                 should_end_session = True
                 script = readScript(questions, fileName)
-                # sendSMS(script)
-                print('START SMS CALL')
-                # url = 'http://150.212.33.69:8000/hello/howareyouuu'
-                # payload = {
-                    # 'message': script,
-                # }
-                # request.get(url)
                 url = 'http://textbelt.com/text'
                 payload = {
-                    'number': 6469202809,
+                    'number': '<YOUR PHONE NUMBER HERE>',
                     'message': script,
                 }
                 requests.post(url, data=payload)
-                # try:
-                #     requests.post(url, data=payload)
-                # except Exception as e:
-                #     print('failllllll, e =', e)
-
                 speech_output = "Reading script. " + script + " Goodbye."
         else:
             speech_output = "index is less than length of questions " \
@@ -290,7 +278,7 @@ def alexaSay(responses, madlibFile):
     while PERCENT_DELIMITER in lineBuffer:
         #Remove percents
         next_target = lineBuffer.find('%');
-        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+2):]
+        lineBuffer = lineBuffer[:next_target] + responses[indexPos] +lineBuffer[(next_target+3):]
         indexPos = indexPos + 1;
     return lineBuffer
 
