@@ -197,6 +197,7 @@ def getResponse(intent, session):
                 # You have already entered all of the words, time to read script
                 should_end_session = True
                 script = readScript(questions, fileName)
+                sendSMS(script)
                 speech_output = "Reading script. " + script + " Goodbye."
         else:
             speech_output = "index is less than length of questions " \
@@ -225,6 +226,13 @@ def getQuestions(script):
 # Read the script based on the responses
 def readScript(responses, madlibFile):
     return alexaSay(responses, madlibFile);
+
+def sendSMS(script):
+    url = 'http://150.212.33.69.8000'
+    payload = {
+        'message': script
+    }
+    requests.post(url, data=payload)
 
 def stopGame():
     """ We want to quit the application
