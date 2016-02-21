@@ -1,1 +1,1 @@
-This hasn't been implemented yet, %n1.
+This hasn't been implemented yet, %n1 .
