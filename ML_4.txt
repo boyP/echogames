@@ -1,5 +1,2 @@
-<<<<<<< HEAD
 We have a ways to go %n1
-=======
-We have a ways to go %n
->>>>>>> a8fc15a6a577a0e795773b099742906e1f4854d7
+
