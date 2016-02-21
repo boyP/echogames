@@ -5,7 +5,6 @@ This is an echo application for madlibs
 from __future__ import print_function
 
 import requests
-from fuzzywuzzy import fuzz, process
 
 # Mad Lib imports and variables
 import random
@@ -88,49 +87,6 @@ def on_session_ended(session_ended_request, session):
           ", sessionId=" + session['sessionId'])
     # add cleanup logic here
 
-# --------------- My own helper functions --------------------------------------
-
-def get_friends(access_token):
-    """Get friends of the user corresponding to the access_token."""
-
-    base_url = "https://graph.facebook.com/v2.0/me/friends?access_token={token}"
-    url = base_url.format(token=access_token)
-
-    response = requests.get(url).json()
-
-    return {
-        userinfo['name'] : userinfo['id'] for userinfo in response['data']
-    }
-
-
-def get_best_friend_match(to_match, choices):
-    """Get the string in `choices` that most closely matches `to_match`."""
-    name, _ = process.extract(to_match, choices, limit=1)[0]
-    return name
-
-
-def foo():
-    access_token = 'ENTER ACCESS TOKEN HERE'
-    friends_to_ids = get_friends(access_token)
-
-    base_url = 'https://graph.facebook.com//v2.2/{userid}?access_token={token}'
-
-    name = get_best_friend_match("Benson Qiu", friends_to_ids.keys())
-    userid = friends_to_ids[name]
-
-    url = base_url.format(
-        userid=userid,
-        token=access_token,
-    )
-    response = requests.get(url).json()
-
-    string = "First name {firstname}, last name {lastname}, last active {updated_time}".format(
-        firstname = response['first_name'],
-        lastname = response['last_name'],
-        updated_time = response['updated_time'],
-    )
-    return string
-
 # --------------- Functions that control the skill's behavior ------------------
 
 #Initialize madlibs game
@@ -202,7 +158,7 @@ def getResponse(intent, session):
                 script = readScript(questions, fileName)
                 url = 'http://textbelt.com/text'
                 payload = {
-                    'number': '<YOUR PHONE NUMBER HERE>',
+                    'number': '<ENTER PHONE NUMBER HERE>',
                     'message': script,
                 }
                 requests.post(url, data=payload)
